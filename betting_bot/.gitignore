@@ -1,0 +1,32 @@
+# Окружение
+.env
+.venv
+env/
+venv/
+
+# База данных
+*.db
+*.sqlite
+*.sqlite3
+
+# Логи
+logs/
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
