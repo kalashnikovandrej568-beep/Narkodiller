@@ -5,37 +5,219 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Narko Game — Симулятор</title>
   <style>
-    body { background: #181818; color: #eee; font-family: 'Segoe UI', sans-serif; margin: 0; }
-    .container { max-width: 420px; margin: 40px auto; background: #232323; border-radius: 12px; box-shadow: 0 0 24px #0008; padding: 28px 24px; }
-    h1 { color: #ff4e7a; text-align: center; margin-bottom: 8px; }
-    .warn { color: #ffb347; background: #2a1a1a; border-radius: 8px; padding: 10px 14px; margin-bottom: 18px; font-size: 15px; text-align: center; }
-    .stats, .actions { margin: 18px 0; }
-    .stats div { margin-bottom: 6px; }
-    button { background: #ff4e7a; color: #fff; border: none; border-radius: 6px; padding: 10px 18px; font-size: 15px; margin: 6px 0; cursor: pointer; transition: background .2s; }
-    button:hover { background: #ff7fa7; }
-    .log { background: #19191a; border-radius: 6px; padding: 10px; min-height: 60px; font-size: 13px; margin-top: 18px; max-height: 120px; overflow-y: auto; }
+    body {
+      background: linear-gradient(135deg, #23243a 0%, #181824 100%);
+      color: #f3f3f3;
+      font-family: 'Segoe UI', 'Montserrat', Arial, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 440px;
+      margin: 48px auto 32px auto;
+      background: rgba(30,32,48,0.98);
+      border-radius: 18px;
+      box-shadow: 0 8px 32px #000a, 0 1.5px 0 #ff4e7a44;
+      padding: 36px 28px 28px 28px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeIn 1.2s cubic-bezier(.42,0,.58,1);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    h1 {
+      color: #ff4e7a;
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 2.2em;
+      letter-spacing: 2px;
+      text-shadow: 0 0 18px #ff4e7a44, 0 2px 0 #fff2;
+      font-family: 'Montserrat', 'Segoe UI', sans-serif;
+    }
+    .warn {
+      color: #ffb347;
+      background: linear-gradient(90deg, #2a1a1a 60%, #3a2a1a 100%);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 22px;
+      font-size: 15px;
+      text-align: center;
+      box-shadow: 0 2px 12px #ffb34722;
+      border: 1px solid #ffb34744;
+    }
+    .stats, .actions {
+      margin: 22px 0;
+    }
+    .stats div {
+      margin-bottom: 8px;
+      font-size: 16px;
+      padding: 4px 0;
+      border-bottom: 1px solid #2a2a3a;
+    }
+    button {
+      background: linear-gradient(90deg, #ff4e7a 60%, #ffb347 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 22px;
+      font-size: 16px;
+      margin: 8px 0;
+      cursor: pointer;
+      box-shadow: 0 2px 8px #ff4e7a22;
+      transition: background .2s, box-shadow .2s, transform .15s;
+      font-family: 'Montserrat', 'Segoe UI', sans-serif;
+    }
+    button:hover {
+      background: linear-gradient(90deg, #ff7fa7 60%, #ffe0a7 100%);
+      box-shadow: 0 4px 16px #ff4e7a44;
+      transform: translateY(-2px) scale(1.04);
+    }
+    .log {
+      background: #19191a;
+      border-radius: 8px;
+      padding: 12px;
+      min-height: 60px;
+      font-size: 14px;
+      margin-top: 22px;
+      max-height: 140px;
+      overflow-y: auto;
+      box-shadow: 0 1px 8px #ff4e7a22;
+    }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      margin: 24px auto 0 auto;
+      background: #23243a;
+      border-radius: 10px;
+      box-shadow: 0 2px 12px #0004;
+      overflow: hidden;
+      max-width: 440px;
+    }
+    .tabs button {
+      flex: 1;
+      background: none;
+      color: #ffb347;
+      border: none;
+      border-right: 1px solid #2a2a3a;
+      border-radius: 0;
+      font-size: 15px;
+      padding: 12px 0;
+      margin: 0;
+      box-shadow: none;
+      transition: background .2s, color .2s;
+      font-family: 'Montserrat', 'Segoe UI', sans-serif;
+    }
+    .tabs button:last-child {
+      border-right: none;
+    }
+    .tabs button.active, .tabs button:focus {
+      background: linear-gradient(90deg, #ff4e7a 60%, #ffb347 100%);
+      color: #fff;
+      font-weight: bold;
+      outline: none;
+    }
+    #tab-content {
+      max-width: 440px;
+      margin: 0 auto 32px auto;
+      background: rgba(30,32,48,0.98);
+      border-radius: 14px;
+      box-shadow: 0 2px 12px #0004;
+      padding: 24px 20px;
+      min-height: 120px;
+      animation: fadeIn .8s cubic-bezier(.42,0,.58,1);
+    }
+    .svg-icon {
+      width: 22px;
+      height: 22px;
+      vertical-align: middle;
+      margin-right: 6px;
+      margin-bottom: 2px;
+      filter: drop-shadow(0 0 4px #ff4e7a88);
+    }
   </style>
 </head>
 <body>
   <div class="container">
+    <div id="inventory-panel" style="max-width:440px;margin:0 auto 18px auto;background:#23243a;padding:14px 18px;border-radius:14px;box-shadow:0 2px 8px #ff4e7a22;display:flex;justify-content:space-around;align-items:center;gap:18px;">
+      <div style="text-align:center;">
+        <svg width="38" height="38"><ellipse cx="19" cy="30" rx="14" ry="7" fill="#ffb347" opacity="0.5"/><rect x="11" y="10" width="16" height="18" rx="8" fill="#ff4e7a" opacity="0.7"/></svg>
+        <div style="font-size:13px;color:#ffb347;">Кокаин</div>
+        <div style="font-weight:bold;color:#ff4e7a;">${farm.cocaine.ready}</div>
+      </div>
+      <div style="text-align:center;">
+        <svg width="38" height="38"><ellipse cx="19" cy="30" rx="14" ry="7" fill="#ffb347" opacity="0.5"/><path d="M19 12 Q24 22 19 30 Q14 22 19 12" stroke="#ff4e7a" stroke-width="2" fill="none"/></svg>
+        <div style="font-size:13px;color:#ffb347;">Марихуана</div>
+        <div style="font-weight:bold;color:#ff4e7a;">${farm.weed.ready}</div>
+      </div>
+      <div style="text-align:center;">
+        <svg width="38" height="38"><polygon points="19,30 11,14 27,14" fill="#ffb347" opacity="0.8"/><polygon points="19,14 14,7 24,7" fill="#ff4e7a" opacity="0.7"/></svg>
+        <div style="font-size:13px;color:#ffb347;">Кристаллы</div>
+        <div style="font-weight:bold;color:#ff4e7a;">${Math.floor(meth/10)}</div>
+      </div>
+      <div style="text-align:center;">
+        <svg width="38" height="38"><ellipse cx="19" cy="30" rx="14" ry="7" fill="#ffb347" opacity="0.5"/><rect x="11" y="10" width="16" height="18" rx="8" fill="#ff4e7a" opacity="0.7"/></svg>
+        <div style="font-size:13px;color:#ffb347;">Псевдо</div>
+        <div style="font-weight:bold;color:#ff4e7a;">${reagents.pseudo}</div>
+      </div>
+      <div style="text-align:center;">
+        <svg width="38" height="38"><ellipse cx="19" cy="30" rx="14" ry="7" fill="#ffb347" opacity="0.5"/><rect x="11" y="10" width="16" height="18" rx="8" fill="#ff4e7a" opacity="0.7"/></svg>
+        <div style="font-size:13px;color:#ffb347;">Кислота</div>
+        <div style="font-weight:bold;color:#ff4e7a;">${reagents.acid}</div>
+      </div>
+      <div style="text-align:center;">
+        <svg width="38" height="38"><ellipse cx="19" cy="30" rx="14" ry="7" fill="#ffb347" opacity="0.5"/><rect x="11" y="10" width="16" height="18" rx="8" fill="#ff4e7a" opacity="0.7"/></svg>
+        <div style="font-size:13px;color:#ffb347;">Фосфор</div>
+        <div style="font-weight:bold;color:#ff4e7a;">${reagents.redp}</div>
+      </div>
+    </div>
     <h1>Narko Game</h1>
     <div class="warn">
-      ⚠️ Игра создана для развлечения и образования. В реальной жизни наркотики опасны и незаконны. Не пробуйте этого в реальности!
+      <svg class="svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#ffb347"/><text x="12" y="16" text-anchor="middle" font-size="14" fill="#23243a" font-family="Segoe UI,Arial" font-weight="bold">!</text></svg>
+      Игра создана для развлечения и образования. В реальной жизни наркотики опасны и незаконны. Не пробуйте этого в реальности!
     </div>
     <div class="stats" id="stats"></div>
     <div class="actions">
-      <button onclick="produce()">Произвести товар</button>
-      <button onclick="sell()">Продать товар</button>
-      <button onclick="nextDay()">Следующий день</button>
+      <button onclick="produce()">
+        <svg class="svg-icon" viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="8" rx="4" fill="#ff4e7a"/><rect x="8" y="4" width="8" height="16" rx="4" fill="#ffb347" opacity=".7"/></svg>
+        Произвести товар
+      </button>
+      <button onclick="sell()">
+        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M4 12h16" stroke="#ffb347" stroke-width="2"/><circle cx="12" cy="12" r="6" fill="#ff4e7a"/></svg>
+        Продать товар
+      </button>
+      <button onclick="nextDay()">
+        <svg class="svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#ffb347"/><path d="M12 6v6l4 2" stroke="#23243a" stroke-width="2" fill="none"/></svg>
+        Следующий день
+      </button>
     </div>
     <div class="log" id="log"></div>
+    <div id="toast" style="display:none;position:fixed;top:24px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,#ff4e7a 60%,#ffb347 100%);color:#fff;padding:14px 32px;border-radius:12px;box-shadow:0 2px 16px #ff4e7a44;font-size:17px;z-index:1000;animation:toastIn .7s;pointer-events:none;font-family:'Montserrat','Segoe UI',sans-serif;font-weight:bold;opacity:0.98;transition:opacity .3s;">
+    </div>
   </div>
   <div class="tabs">
-    <button onclick="showTab('farm')" id="tab-farm">Ферма</button>
-    <button onclick="showTab('lab')" id="tab-lab">Лаборатория</button>
-    <button onclick="showTab('shop')" id="tab-shop">Магазин</button>
-    <button onclick="showTab('clients')" id="tab-clients">Клиенты</button>
-    <button onclick="showTab('fin')" id="tab-fin">Финансы</button>
+    <button onclick="showTab('farm')" id="tab-farm">
+      <svg class="svg-icon" viewBox="0 0 24 24"><ellipse cx="12" cy="16" rx="8" ry="4" fill="#ffb347"/><rect x="9" y="6" width="6" height="8" rx="3" fill="#ff4e7a"/></svg>
+      Ферма
+    </button>
+    <button onclick="showTab('lab')" id="tab-lab">
+      <svg class="svg-icon" viewBox="0 0 24 24"><rect x="7" y="4" width="10" height="16" rx="5" fill="#ff4e7a"/><rect x="9" y="8" width="6" height="8" rx="3" fill="#ffb347"/></svg>
+      Лаборатория
+    </button>
+    <button onclick="showTab('shop')" id="tab-shop">
+      <svg class="svg-icon" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="8" rx="4" fill="#ffb347"/><rect x="8" y="6" width="8" height="8" rx="4" fill="#ff4e7a"/></svg>
+      Магазин
+    </button>
+    <button onclick="showTab('clients')" id="tab-clients">
+      <svg class="svg-icon" viewBox="0 0 24 24"><circle cx="8" cy="12" r="4" fill="#ffb347"/><circle cx="16" cy="12" r="4" fill="#ff4e7a"/></svg>
+      Клиенты
+    </button>
+    <button onclick="showTab('fin')" id="tab-fin">
+      <svg class="svg-icon" viewBox="0 0 24 24"><rect x="6" y="8" width="12" height="8" rx="4" fill="#ffb347"/><rect x="10" y="4" width="4" height="16" rx="2" fill="#ff4e7a"/></svg>
+      Финансы
+    </button>
   </div>
   <div id="tab-content"></div>
   <script>
@@ -55,24 +237,43 @@
     let meth = 0;
     // --- Система поиска клиентов и продажи ---
     let clients = [];
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.innerHTML = msg;
+      toast.style.display = 'block';
+      toast.style.opacity = '0.98';
+      setTimeout(()=>{
+        toast.style.opacity = '0';
+        setTimeout(()=>{toast.style.display='none';},350);
+      }, 1800);
+    }
+
     function renderClients() {
-      let html = `<h2>Клиенты</h2>`;
-      html += `<button onclick='findClient()'>Поиск клиента (-5$)</button><br><br>`;
-      if(clients.length === 0) html += '<div>Нет найденных клиентов. Ищите новых!</div>';
+      let html = `<h2 style='color:#ff4e7a;text-align:center;margin-bottom:12px;'>Клиенты</h2>`;
+      html += `<button onclick='findClient()' style='margin-bottom:12px;'>Поиск клиента (-5$)</button><br>`;
+      if(clients.length === 0) html += '<div style="color:#ffb347;text-align:center;margin-top:18px;">Нет найденных клиентов. Ищите новых!</div>';
       else {
-        html += '<div>Найденные клиенты:</div>';
+        html += '<div style="margin-bottom:10px;color:#ffb347;">Найденные клиенты:</div>';
         clients.forEach((c,i)=>{
-          html += `<div style='margin:8px 0;padding:8px;background:#232;'>`;
-          html += `<b>${c.type==='meth'?'Метамфетамин':c.type==='cocaine'?'Кокаин':'Марихуана'}</b> — ${c.name}<br>`;
-          html += `Цена: <b>${c.price}$</b> за 10г<br>`;
-          html += `<button onclick='sellToClient(${i})'>Продать</button>`;
+          html += `<div style='margin:8px 0 14px 0;padding:12px 16px;background:linear-gradient(90deg,#23243a 60%,#181824 100%);border-radius:10px;box-shadow:0 2px 8px #ff4e7a22;display:flex;align-items:center;gap:16px;'>`;
+          html += `<span style='display:inline-block;'>`;
+          if(c.type==='meth') html += `<svg class='svg-icon' viewBox='0 0 24 24'><rect x='7' y='4' width='10' height='16' rx='5' fill='#ff4e7a'/><rect x='9' y='8' width='6' height='8' rx='3' fill='#ffb347'/></svg>`;
+          if(c.type==='cocaine') html += `<svg class='svg-icon' viewBox='0 0 24 24'><ellipse cx='12' cy='16' rx='8' ry='4' fill='#ffb347'/><rect x='9' y='6' width='6' height='8' rx='3' fill='#ff4e7a'/></svg>`;
+          if(c.type==='weed') html += `<svg class='svg-icon' viewBox='0 0 24 24'><ellipse cx='12' cy='16' rx='8' ry='4' fill='#ffb347'/><path d='M12 8 Q14 12 12 16 Q10 12 12 8' stroke='#ff4e7a' stroke-width='2' fill='none'/></svg>`;
+          html += `</span>`;
+          html += `<span style='flex:1;'>`;
+          html += `<b style='color:#ff4e7a;'>${c.type==='meth'?'Метамфетамин':c.type==='cocaine'?'Кокаин':'Марихуана'}</b> — <span style='color:#ffb347;'>${c.name}</span><br>`;
+          html += `Цена: <b style='color:#ffb347;'>${c.price}$</b> за 10г<br>`;
+          html += `</span>`;
+          html += `<button onclick='sellToClient(${i})' style='margin-top:8px;'>Продать</button>`;
           html += `</div>`;
         });
       }
       document.getElementById('tab-content').innerHTML = html;
     }
     function findClient() {
-      if(money<5){log.push('Недостаточно денег на поиск клиентов!');update();return;}
+      if(money<5){log.push('Недостаточно денег на поиск клиентов!');showToast('Недостаточно денег!');update();return;}
       money-=5;
       // Тип клиента
       let types = ['meth','cocaine','weed'];
@@ -85,117 +286,115 @@
       if(type==='weed') price = 40+Math.floor(Math.random()*20);
       clients.push({type,name,price});
       log.push('Найден новый клиент: '+name);
+      showToast('Найден новый клиент: '+name);
       update(); renderClients();
     }
     function sellToClient(idx) {
       let c = clients[idx];
       let ok = Math.random()<0.85;
-      let amount = 10;
-      if(c.type==='meth'){
-        if(meth<amount){log.push('Недостаточно мета!');update();return;}
-        if(ok){meth-=amount;money+=c.price;log.push('Продано 10г мета клиенту '+c.name+'.');}
-        else{risk+=8;log.push('Клиент оказался копом! Риск вырос!');}
-      }
-      if(c.type==='cocaine'){
-        if(product<amount){log.push('Недостаточно кокаина!');update();return;}
-        if(ok){product-=amount;money+=c.price;log.push('Продано 10г кокаина клиенту '+c.name+'.');}
-        else{risk+=7;log.push('Клиент оказался копом! Риск вырос!');}
-      }
-      if(c.type==='weed'){
-        if(product<amount){log.push('Недостаточно марихуаны!');update();return;}
-        if(ok){product-=amount;money+=c.price;log.push('Продано 10г марихуаны клиенту '+c.name+'.');}
-        else{risk+=5;log.push('Клиент оказался копом! Риск вырос!');}
-      }
-      clients.splice(idx,1);
-      update(); renderClients();
-    }
-    function update() {
-      document.getElementById('stats').innerHTML =
-        `<div>День: <b>${day}</b></div>` +
-        `<div>Деньги: <b>${money}$</b></div>` +
-        `<div>Товар: <b>${product} г</b></div>` +
-        `<div>Риск: <b>${risk}%</b></div>` +
-        `<div>Внимание полиции: <b>${wanted}%</b></div>`;
-      document.getElementById('log').innerHTML = log.slice(-5).join('<br>');
-    }
+      function showTab(tab) {
+        if(tab==='farm'){
+          let html = `<h2 style='color:#ff4e7a;text-align:center;margin-bottom:12px;'>Визуальная ферма</h2>`;
+          html += `<div style='display:flex;gap:32px;justify-content:center;margin-bottom:18px;'>`;
+          // Кокаиновые кусты
+          html += `<div style='background:#23243a;padding:18px 22px;border-radius:14px;box-shadow:0 2px 8px #ffb34722;display:flex;flex-direction:column;align-items:center;'>`;
+          html += `<div style='font-weight:bold;color:#ffb347;margin-bottom:8px;'>Кокаиновые кусты</div>`;
+          html += `<svg width='90' height='70' style='margin-bottom:8px;'>`;
+          for(let i=0;i<farm.cocaine.planted;i++){
+            let grow = Math.min(1, (farm.cocaine.ready/(farm.cocaine.planted||1)));
+            let y = 60-30*grow;
+            html += `<ellipse cx='${20+25*i}' cy='${y}' rx='12' ry='18' fill='#ffb347' opacity='0.7'/><rect x='${14+25*i}' y='${y-18}' width='12' height='18' rx='6' fill='#ff4e7a'/>`;
+          }
+          html += `</svg>`;
+          html += `<div style='margin-top:8px;'>Созрело: <b style='color:#ffb347;'>${farm.cocaine.ready}</b> / ${farm.cocaine.planted}</div>`;
+          html += `<button onclick='farm.cocaine.planted++;showToast("Посажен куст коки!");update();showTab("farm")' style='margin-top:8px;'>Посадить коку</button>`;
+          html += `</div>`;
+          // Кусты марихуаны
+          html += `<div style='background:#23243a;padding:18px 22px;border-radius:14px;box-shadow:0 2px 8px #ffb34722;display:flex;flex-direction:column;align-items:center;'>`;
+          html += `<div style='font-weight:bold;color:#ffb347;margin-bottom:8px;'>Кусты марихуаны</div>`;
+          html += `<svg width='90' height='70' style='margin-bottom:8px;'>`;
+          for(let i=0;i<farm.weed.planted;i++){
+            let grow = Math.min(1, (farm.weed.ready/(farm.weed.planted||1)));
+            let y = 60-30*grow;
+            html += `<ellipse cx='${20+25*i}' cy='${y}' rx='12' ry='18' fill='#ffb347' opacity='0.7'/><path d='M${20+25*i} ${y-18} Q${25+25*i} ${y-8} ${20+25*i} ${y+18} Q${15+25*i} ${y-8} ${20+25*i} ${y-18}' stroke='#ff4e7a' stroke-width='2' fill='none'/>`;
+          }
+          html += `</svg>`;
+          html += `<div style='margin-top:8px;'>Созрело: <b style='color:#ffb347;'>${farm.weed.ready}</b> / ${farm.weed.planted}</div>`;
+          html += `<button onclick='farm.weed.planted++;showToast("Посажен куст марихуаны!");update();showTab("farm")' style='margin-top:8px;'>Посадить марихуану</button>`;
+          html += `</div>`;
+          html += `</div>`;
+          html += `<div style='text-align:center;margin-top:18px;color:#ffb347;'>Рост происходит каждый день автоматически</div>`;
+          // Кристаллы
+          html += `<div style='margin:32px auto 0 auto;max-width:320px;background:#23243a;padding:18px 22px;border-radius:14px;box-shadow:0 2px 8px #ff4e7a22;display:flex;flex-direction:column;align-items:center;'>`;
+          html += `<div style='font-weight:bold;color:#ff4e7a;margin-bottom:8px;'>Кристаллы мета</div>`;
+          html += `<svg width='90' height='70' style='margin-bottom:8px;'>`;
+          for(let i=0;i<Math.floor(meth/10);i++){
+            let x = 20+25*i;
+            html += `<polygon points='${x},60 ${x-8},40 ${x+8},40' fill='#ffb347' opacity='0.8'/><polygon points='${x},40 ${x-5},30 ${x+5},30' fill='#ff4e7a' opacity='0.7'/>`;
+          }
+          html += `</svg>`;
+          html += `<div style='margin-top:8px;'>Кристаллов: <b style='color:#ff4e7a;'>${Math.floor(meth/10)}</b></div>`;
+          html += `</div>`;
+          document.getElementById('tab-content').innerHTML = html;
+        }
+        if(tab==='lab'){
+          let html = `<h2 style='color:#ff4e7a;text-align:center;margin-bottom:12px;'>Лаборатория</h2>`;
+          html += `<div style='background:#23243a;padding:18px 22px;border-radius:12px;box-shadow:0 2px 8px #ff4e7a22;text-align:center;display:flex;flex-direction:column;align-items:center;'>`;
+          html += `<div style='font-weight:bold;color:#ffb347;margin-bottom:8px;'>Реактор</div>`;
+          html += `<svg width='100' height='70' style='margin-bottom:8px;'>`;
+          html += `<ellipse cx='50' cy='60' rx='32' ry='10' fill='#ffb347' opacity='0.5'/><rect x='30' y='20' width='40' height='40' rx='20' fill='#ff4e7a' opacity='0.7'/><rect x='40' y='30' width='20' height='30' rx='10' fill='#ffb347' opacity='0.8'/></svg>`;
+          html += `<div style='margin-top:8px;'>Мета: <b style='color:#ffb347;'>${meth}</b></div>`;
+          html += `<button onclick='if(reagents.pseudo>0&&reagents.acid>0&&reagents.redp>0){meth+=10;reagents.pseudo--;reagents.acid--;reagents.redp--;showToast("Сварено 10г мета!");}else{showToast("Нет всех реагентов!");}update();showTab("lab")' style='margin-top:8px;'>Сварить мет</button>`;
+          html += `<div style='margin-top:14px;'>`;
+          // --- Единая современная JS-логика ---
+          let day = 1;
+          let money = 100;
+          let product = 0;
+          let risk = 5;
+          let wanted = 0;
+          let log = [];
+          let farm = {
+            cocaine: { planted: 0, growing: 0, ready: 0 },
+            weed: { planted: 0, growing: 0, ready: 0 }
+          };
+          let reagents = { pseudo: 0, acid: 0, redp: 0 };
+          let meth = 0;
+          let clients = [];
 
-    function produce() {
-      if (money < 20) { log.push('Недостаточно денег для производства.'); update(); return; }
-      let amount = Math.floor(Math.random()*6)+5;
-      product += amount;
-      money -= 20;
-      risk += 2;
-      log.push(`Произведено ${amount} г товара. -20$`);
-      update();
-    }
+          function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerHTML = msg;
+            toast.style.display = 'block';
+            toast.style.opacity = '0.98';
+            setTimeout(()=>{
+              toast.style.opacity = '0';
+              setTimeout(()=>{toast.style.display='none';},350);
+            }, 1800);
+          }
 
-    function sell() {
-      if (product < 5) { log.push('Недостаточно товара для продажи.'); update(); return; }
-      let amount = Math.min(product, Math.floor(Math.random()*8)+5);
-      let price = amount * (10 + Math.floor(Math.random()*6));
-      product -= amount;
-      money += price;
-      risk += 3;
-      log.push(`Продано ${amount} г за ${price}$.`);
-      update();
-    }
+          function animateInventory(resource) {
+            const panel = document.getElementById('inventory-panel');
+            if (!panel) return;
+            const items = panel.querySelectorAll('div');
+            let idx = -1;
+            if(resource==='cocaine') idx=0;
+            if(resource==='weed') idx=1;
+            if(resource==='crystal') idx=2;
+            if(resource==='pseudo') idx=3;
+            if(resource==='acid') idx=4;
+            if(resource==='redp') idx=5;
+            if(idx>=0 && items[idx]) {
+              items[idx].style.transition = 'box-shadow .3s, transform .3s';
+              items[idx].style.boxShadow = '0 0 18px #ff4e7a88';
+              items[idx].style.transform = 'scale(1.12)';
+              setTimeout(()=>{
+                items[idx].style.boxShadow = '';
+                items[idx].style.transform = '';
+              }, 350);
+            }
+          }
 
-    function nextDay() {
-      day++;
-      // Случайные события
-      if (Math.random() < risk/100) {
-        let fine = 50 + Math.floor(Math.random()*100);
-        money = Math.max(0, money-fine);
-        wanted += 10;
-        log.push(`Полиция провела рейд! Штраф: ${fine}$.`);
-      } else if (Math.random() < 0.15) {
-        let loss = Math.floor(product*0.3);
-        product = Math.max(0, product-loss);
-        log.push(`Конкуренты украли ${loss} г товара!`);
-      }
-      // Сброс риска
-      risk = Math.max(1, risk - 4);
-      // Внимание полиции
-      if (wanted > 0 && Math.random() < wanted/100) {
-        log.push('Вас арестовали! Игра окончена.');
-        disableGame();
-        update();
-        return;
-      }
-      update();
-    }
-
-    function disableGame() {
-      document.querySelectorAll('button').forEach(btn => btn.disabled = true);
-    }
-
-    function showTab(tab) {
-      document.getElementById('tab-farm').style.background = tab==='farm' ? '#ff4e7a' : '';
-      document.getElementById('tab-lab').style.background = tab==='lab' ? '#ff4e7a' : '';
-      document.getElementById('tab-shop').style.background = tab==='shop' ? '#ff4e7a' : '';
-      document.getElementById('tab-clients').style.background = tab==='clients' ? '#ff4e7a' : '';
-      document.getElementById('tab-fin').style.background = tab==='fin' ? '#ff4e7a' : '';
-      if(tab==='farm') renderFarm();
-      else if(tab==='lab') renderLab();
-      else if(tab==='shop') renderShop();
-      else if(tab==='clients') renderClients();
-      else if(tab==='fin') renderFin();
-    }
-    function renderFarm() {
-      let html = `<h2>Ферма</h2>`;
-      html += `<div>Кокаиновые кусты: ${farm.cocaine.growing} растет, ${farm.cocaine.ready} готово</div>`;
-      html += `<button onclick='plantCocaine()'>Посадить куст коки (-10$)</button> `;
-      html += `<button onclick='harvestCocaine()'>Собрать урожай коки</button><br>`;
-      html += `<div>Кусты марихуаны: ${farm.weed.growing} растет, ${farm.weed.ready} готово</div>`;
-      html += `<button onclick='plantWeed()'>Посадить куст марихуаны (-5$)</button> `;
-      html += `<button onclick='harvestWeed()'>Собрать урожай марихуаны</button>`;
-      document.getElementById('tab-content').innerHTML = html;
-    }
-    function plantCocaine() {
-      if(money<10){log.push('Недостаточно денег для посадки коки!');update();return;}
-      money-=10; farm.cocaine.growing++;
-      log.push('Посажен куст коки.'); update(); renderFarm();
-    }
+          // ...existing code...
     function harvestCocaine() {
       if(farm.cocaine.ready<1){log.push('Нет готовых кустов коки!');update();return;}
       let amt = farm.cocaine.ready*5;
